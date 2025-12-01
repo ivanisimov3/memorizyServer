@@ -39,7 +39,7 @@ class SecurityConfig(
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
-        return BCryptPasswordEncoder() // шифрование паролей
+        return BCryptPasswordEncoder() // Способ шифровки
     }
 
     @Bean
