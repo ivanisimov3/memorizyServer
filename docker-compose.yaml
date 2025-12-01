@@ -1,16 +1,16 @@
 version: '3.8'
 services:
   db:
-    image: postgres:15-alpine
+    image: postgres:15-alpine # alpine - облегченная версия
     container_name: memorizy_db
     ports:
       - "5432:5432"
-    environment:
+    environment:  # настройка бд при запуске
       POSTGRES_DB: memorizy_db
       POSTGRES_USER: memorizy_user
       POSTGRES_PASSWORD: memorizy_password
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-volumes:
+volumes:  # сохранение данных на жестком диске
   postgres_data:
