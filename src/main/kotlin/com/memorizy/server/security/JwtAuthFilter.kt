@@ -10,10 +10,12 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
+// The filter class that each request to the server passes through
+
 @Component
 class JwtAuthFilter(
     private val jwtService: JwtService,
-    private val userDetailsService: UserDetailsService // Стандартный интерфейс Spring
+    private val userDetailsService: UserDetailsService  // Core interface which loads user-specific data.
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
@@ -21,30 +23,31 @@ class JwtAuthFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val authHeader = request.getHeader("Authorization") // читаем есть ли заголовок для входа
+        val authHeader = request.getHeader("Authorization") // Проверка на заголовок Authorization в запросе
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response)
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {  // Если не авторизация
+            filterChain.doFilter(request, response) // Сразу на фильтрацию
             return
         }
 
-        val jwt = authHeader.substring(7)
-        val username = jwtService.extractUsername(jwt)  // пытаемся прочитать имя с заголовка
+        val jwt = authHeader.substring(7)   // Токен без ключевого слова Bearer
+        val username = jwtService.extractUsername(jwt)  // Извлекаем имя из токена
 
-        // если юзер есть в токене, но еще не аутентифицирован в контексте
+        // Если имя существует (зарагестрирован), но не авторизован
         if (username != null && SecurityContextHolder.getContext().authentication == null) {
-            val userDetails = userDetailsService.loadUserByUsername(username)
+            val userDetails = userDetailsService.loadUserByUsername(username)   // Полные данные пользователя
 
-            // создаем объект аутентификации
+            // Создаем токен авторизации (полноценный пропуск)
             val authToken = UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.authorities
             )
             authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
 
-            // кладем его в контекст (теперь Spring знает, кто это)
+            // Кладем токен авторизации на сервер
             SecurityContextHolder.getContext().authentication = authToken
         }
 
+        // На фильтрацию
         filterChain.doFilter(request, response)
     }
 }

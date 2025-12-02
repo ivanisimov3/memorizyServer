@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-// Входная точка, принимает http запрос
+// Controller, the task is to accept the request, send it to the correct service, receive a response and send it back.
+
 @RestController
 @RequestMapping("/api/auth") // Все запросы начинаются с этого адреса
 class AuthController(

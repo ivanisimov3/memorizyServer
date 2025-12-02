@@ -1,16 +1,18 @@
+# How to launch a container with a PostgreSQL database using Docker Compose
+
 version: '3.8'
 services:
   db:
-    image: postgres:15-alpine # alpine - облегченная версия
+    image: postgres:15-alpine # Использовать облегченную версию
     container_name: memorizy_db
     ports:
       - "5432:5432"
-    environment:  # настройка бд при запуске
+    environment:  # Настройки Базы Данных при первом запуске
       POSTGRES_DB: memorizy_db
       POSTGRES_USER: memorizy_user
       POSTGRES_PASSWORD: memorizy_password
-    volumes:
+    volumes:  # Связывание директории с данными и именованный том на хост-машине
       - postgres_data:/var/lib/postgresql/data
 
-volumes:  # сохранение данных на жестком диске
-  postgres_data:
+volumes:
+  postgres_data:  # Объявление именованного тома в корне файла

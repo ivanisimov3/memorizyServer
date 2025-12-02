@@ -2,11 +2,16 @@ package com.memorizy.server.service
 
 import com.memorizy.server.dto.StudySetDto
 import com.memorizy.server.model.StudySet
+import com.memorizy.server.model.User
 import com.memorizy.server.repository.StudySetRepository
 import com.memorizy.server.repository.UserRepository
+import org.springframework.http.HttpStatus
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
+
+// A service class that stores business logic
 
 @Service
 class StudySetService(
@@ -14,14 +19,14 @@ class StudySetService(
     private val userRepository: UserRepository
 ) {
 
-    // Вспомогательная функция: Получить текущего залогиненного юзера
-    private fun getCurrentUser(): com.memorizy.server.model.User {
+    // Найти текущего User в базе
+    private fun getCurrentUser(): User {
         val username = SecurityContextHolder.getContext().authentication.name
         return userRepository.findByUsername(username)
             .orElseThrow { UsernameNotFoundException("User not found") }
     }
 
-    // Создать набор
+    // Создать набор у текущего пользователя
     fun createStudySet(dto: StudySetDto): StudySetDto {
         val currentUser = getCurrentUser()
 
@@ -29,15 +34,15 @@ class StudySetService(
             name = dto.name,
             description = dto.description,
             iconId = dto.iconId,
-            user = currentUser // Привязываем к текущему пользователю
+            user = currentUser
         )
 
         val savedSet = studySetRepository.save(studySet)
 
-        return dto.copy(id = savedSet.id) // Возвращаем DTO с новым ID
+        return dto.copy(id = savedSet.id)   // Возвращаем DTO с новым ID
     }
 
-    // Получить ВСЕ наборы текущего пользователя
+    // Получить все наборы текущего пользователя
     fun getAllStudySets(): List<StudySetDto> {
         val currentUser = getCurrentUser()
 
@@ -51,19 +56,17 @@ class StudySetService(
         }
     }
 
-    // Удалить набор
-    fun deleteStudySet(setId: Int) { // У тебя Int, помню
-        // 1. Ищем набор
+    // Удалить набор у текущего пользователя
+    fun deleteStudySet(setId: Long) {
         val studySet = studySetRepository.findById(setId)
-            .orElseThrow { RuntimeException("Set not found") }
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Set not found") }
 
-        // Нельзя дать Васе удалить набор Пети
         val currentUser = getCurrentUser()
+
         if (studySet.user.username != currentUser.username) {
-            throw RuntimeException("You do not own this set")
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "You do not own this set")
         }
 
-        // 3. Удаляем
         studySetRepository.delete(studySet)
     }
 }

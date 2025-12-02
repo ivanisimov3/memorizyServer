@@ -9,23 +9,24 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 
+// A service class that stores business logic
+
 @Service
 class CardService(
     private val cardRepository: CardRepository,
     private val studySetRepository: StudySetRepository
 ) {
 
-    // Вспомогательная функция: Получить имя текущего юзера из токена
+    // Найти текущее Username в базе
     private fun getCurrentUsername(): String {
         return SecurityContextHolder.getContext().authentication.name
     }
 
-    // Создать карточку
+    // Создать карточку у текущего пользователя
     fun createCard(dto: CardDto): CardDto {
         val studySet = studySetRepository.findById(dto.studySetId)
             .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Set not found") }
 
-        // Если владелец набора НЕ совпадает с тем, кто стучится -> Ошибка 403
         if (studySet.user.username != getCurrentUsername()) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "You do not own this set")
         }
@@ -38,12 +39,11 @@ class CardService(
 
         val savedCard = cardRepository.save(card)
 
-        return dto.copy(id = savedCard.id)
+        return dto.copy(id = savedCard.id)  // Возвращаем DTO с новым ID
     }
 
-    // Получить карточки набора
-    fun getCardsBySetId(setId: Int): List<CardDto> {
-        // Сначала проверяем доступ к набору
+    // Получить все карточки текущего пользователя
+    fun getCardsBySetId(setId: Long): List<CardDto> {
         val studySet = studySetRepository.findById(setId)
             .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Set not found") }
 
@@ -62,11 +62,10 @@ class CardService(
     }
 
     // Удалить карточку
-    fun deleteCard(cardId: Int) {
+    fun deleteCard(cardId: Long) {
         val card = cardRepository.findById(cardId)
             .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Card not found") }
 
-        // Проверяем владельца через цепочку: Карточка -> Набор -> Пользователь
         if (card.studySet.user.username != getCurrentUsername()) {
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "You do not own this card")
         }

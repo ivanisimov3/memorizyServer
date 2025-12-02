@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 
+// A service class that stores business logic
+
 @Service
 class CustomUserDetailsService(
     private val userRepository: UserRepository
@@ -16,11 +18,11 @@ class CustomUserDetailsService(
         val user = userRepository.findByUsername(username)
             .orElseThrow { UsernameNotFoundException("User not found") }
 
-        // Мы берем НАШЕГО user и превращаем в SPRING user
+        // Превращаем обычного User в UserDetails для Spring Security
         return User.builder()
             .username(user.username)
-            .password(user.passwordHash) // Spring сам сверит пароль с хэшем
-            .roles("USER") // Пока у всех роль USER
+            .password(user.passwordHash)
+            .roles("USER")
             .build()
     }
 }

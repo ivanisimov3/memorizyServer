@@ -5,30 +5,27 @@ import com.memorizy.server.service.CardService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
+// Controller, the task is to accept the request, send it to the correct service, receive a response and send it back.
+
 @RestController
 @RequestMapping("/api/cards")
 class CardController(
     private val cardService: CardService
 ) {
 
-    // Добавить карточку
     @PostMapping
     fun createCard(@RequestBody dto: CardDto): ResponseEntity<CardDto> {
         return ResponseEntity.ok(cardService.createCard(dto))
     }
 
-    // Получить карточки конкретного набора
-    // Пример: GET /api/cards/by-set/5
     @GetMapping("/by-set/{setId}")
-    fun getCardsBySet(@PathVariable setId: Int): ResponseEntity<List<CardDto>> {
+    fun getCardsBySet(@PathVariable setId: Long): ResponseEntity<List<CardDto>> {
         return ResponseEntity.ok(cardService.getCardsBySetId(setId))
     }
 
-    // Удалить карточку
-    // Пример: DELETE /api/cards/10
     @DeleteMapping("/{id}")
-    fun deleteCard(@PathVariable id: Int): ResponseEntity<Void> {
+    fun deleteCard(@PathVariable id: Long): ResponseEntity<Void> {
         cardService.deleteCard(id)
-        return ResponseEntity.noContent().build()
+        return ResponseEntity.noContent().build()   // Возвращаем 204 No Content
     }
 }

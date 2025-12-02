@@ -10,7 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
-// Аналог ViewModel
+// A service class that stores business logic
+
 @Service
 class AuthService(
     private val userRepository: UserRepository,
@@ -19,18 +20,17 @@ class AuthService(
     private val authenticationManager: AuthenticationManager
 ) {
 
+    // Регистрация пользователя
     fun register(request: AuthRequest): AuthResponse {
-        if (userRepository.existsByUsername(request.username)) {
+        if (userRepository.existsByUsername(request.username)) {    // Проверка на занятость username
             throw RuntimeException("Username is already taken")
         }
 
-        // Создаем пользователя
         val user = User(
             username = request.username,
             passwordHash = passwordEncoder.encode(request.password)
         )
 
-        // Сохраняем в базу
         userRepository.save(user)
 
         // Сразу выдаем токен, чтобы не заставлять логиниться
@@ -38,7 +38,9 @@ class AuthService(
         return AuthResponse(token)
     }
 
+    // Авторизация пользователя
     fun login(request: AuthRequest): AuthResponse {
+
         // Spring Security сам проверит логин и пароль.
         // Если пароль неверный, он выбросит ошибку (403 Forbidden).
         authenticationManager.authenticate(
@@ -48,10 +50,10 @@ class AuthService(
             )
         )
 
-        // Если мы здесь, значит пароль верный. Генерируем токен.
         val user = userRepository.findByUsername(request.username)
-            .orElseThrow() // Такого быть не должно после успешной аутентификации
+            .orElseThrow()
 
+        // Выдаем токен
         val token = jwtService.generateToken(user.username)
         return AuthResponse(token)
     }
