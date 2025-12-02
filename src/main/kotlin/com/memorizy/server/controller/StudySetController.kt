@@ -20,4 +20,10 @@ class StudySetController(
     fun createSet(@RequestBody dto: StudySetDto): ResponseEntity<StudySetDto> {
         return ResponseEntity.ok(studySetService.createStudySet(dto))
     }
+
+    @DeleteMapping("/{id}")
+    fun deleteSet(@PathVariable id: Int): ResponseEntity<Void> {
+        studySetService.deleteStudySet(id)
+        return ResponseEntity.noContent().build() // Возвращаем 204 No Content
+    }
 }

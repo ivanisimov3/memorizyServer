@@ -41,14 +41,29 @@ class StudySetService(
     fun getAllStudySets(): List<StudySetDto> {
         val currentUser = getCurrentUser()
 
-        return studySetRepository.findAllByUserUsername(currentUser.username)
-            .map { set ->
-                StudySetDto(
-                    id = set.id,
-                    name = set.name,
-                    description = set.description,
-                    iconId = set.iconId
-                )
-            }
+        return studySetRepository.findAllByUserUsername(currentUser.username).map { set ->
+            StudySetDto(
+                id = set.id,
+                name = set.name,
+                description = set.description,
+                iconId = set.iconId
+            )
+        }
+    }
+
+    // Удалить набор
+    fun deleteStudySet(setId: Int) { // У тебя Int, помню
+        // 1. Ищем набор
+        val studySet = studySetRepository.findById(setId)
+            .orElseThrow { RuntimeException("Set not found") }
+
+        // Нельзя дать Васе удалить набор Пети
+        val currentUser = getCurrentUser()
+        if (studySet.user.username != currentUser.username) {
+            throw RuntimeException("You do not own this set")
+        }
+
+        // 3. Удаляем
+        studySetRepository.delete(studySet)
     }
 }
