@@ -21,6 +21,9 @@ data class StudySet(
     @Column(nullable = false)
     val iconId: Int,
 
+    @Column(nullable = false, updatable = false)
+    val createdAt: Long = System.currentTimeMillis(),
+
     // Много наборов может принадлежать одному пользователю
     // FetchType.LAZY - если берем набор из БД не грузим сразу информацию о пользователе
     @ManyToOne(fetch = FetchType.LAZY)

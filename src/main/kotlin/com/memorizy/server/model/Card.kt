@@ -18,6 +18,9 @@ data class Card(
     @Column(nullable = false)
     val definition: String,
 
+    @Column(nullable = false, updatable = false)
+    val createdAt: Long = System.currentTimeMillis(),
+
     // Много карточек может принадлежать одному набору
     // FetchType.LAZY - если берем карточку из БД не грузим сразу информацию о наборе
     @ManyToOne(fetch = FetchType.LAZY)
