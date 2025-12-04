@@ -35,7 +35,7 @@ class AuthService(
 
         // Сразу выдаем токен, чтобы не заставлять логиниться
         val token = jwtService.generateToken(user.username)
-        return AuthResponse(token)
+        return AuthResponse(token, user.id)
     }
 
     // Авторизация пользователя
@@ -55,6 +55,6 @@ class AuthService(
 
         // Выдаем токен
         val token = jwtService.generateToken(user.username)
-        return AuthResponse(token)
+        return AuthResponse(token, user.id)
     }
 }
