@@ -56,7 +56,8 @@ class CardService(
                 id = card.id,
                 term = card.term,
                 definition = card.definition,
-                studySetId = setId
+                studySetId = setId,
+                createdAt = card.createdAt
             )
         }
     }

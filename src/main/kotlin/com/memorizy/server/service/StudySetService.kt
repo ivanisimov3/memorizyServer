@@ -51,7 +51,8 @@ class StudySetService(
                 id = set.id,
                 name = set.name,
                 description = set.description,
-                iconId = set.iconId
+                iconId = set.iconId,
+                createdAt = set.createdAt
             )
         }
     }
