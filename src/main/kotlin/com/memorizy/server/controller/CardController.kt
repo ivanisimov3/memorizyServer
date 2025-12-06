@@ -23,6 +23,11 @@ class CardController(
         return ResponseEntity.ok(cardService.createCard(dto))
     }
 
+    @PutMapping("/{id}")
+    fun updateCard(@PathVariable id: Long, @RequestBody dto: CardDto): ResponseEntity<CardDto> {
+        return ResponseEntity.ok(cardService.updateCard(id, dto))
+    }
+
     @DeleteMapping("/{id}")
     fun deleteCard(@PathVariable id: Long): ResponseEntity<Void> {
         cardService.deleteCard(id)

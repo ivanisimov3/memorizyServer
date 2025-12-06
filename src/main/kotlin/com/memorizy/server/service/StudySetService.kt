@@ -57,6 +57,28 @@ class StudySetService(
         }
     }
 
+    // Обновить информацию набора текущего пользователя
+    fun updateStudySet(id: Long, dto: StudySetDto): StudySetDto {
+        val existingSet = studySetRepository.findById(id)
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Set not found") }
+
+        val currentUser = getCurrentUser()
+
+        if (existingSet.user.username != currentUser.username) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "You do not own this set")
+        }
+
+        val updatedSet = existingSet.copy(
+            name = dto.name,
+            description = dto.description,
+            iconId = dto.iconId
+        )
+
+        studySetRepository.save(updatedSet)
+
+        return dto.copy(id = id, createdAt = existingSet.createdAt)
+    }
+
     // Удалить набор у текущего пользователя
     fun deleteStudySet(setId: Long) {
         val studySet = studySetRepository.findById(setId)

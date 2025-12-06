@@ -23,6 +23,11 @@ class StudySetController(
         return ResponseEntity.ok(studySetService.createStudySet(dto))
     }
 
+    @PutMapping("/{id}")
+    fun updateSet(@PathVariable id: Long, @RequestBody dto: StudySetDto): ResponseEntity<StudySetDto> {
+        return ResponseEntity.ok(studySetService.updateStudySet(id, dto))
+    }
+
     @DeleteMapping("/{id}")
     fun deleteSet(@PathVariable id: Long): ResponseEntity<Void> {
         studySetService.deleteStudySet(id)

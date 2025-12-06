@@ -62,6 +62,25 @@ class CardService(
         }
     }
 
+    // Обновить карточку текущего пользователя
+    fun updateCard(id: Long, dto: CardDto): CardDto {
+        val existingCard = cardRepository.findById(id)
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Card not found") }
+
+        if (existingCard.studySet.user.username != getCurrentUsername()) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "You do not own this card")
+        }
+
+        val updatedCard = existingCard.copy(
+            term = dto.term,
+            definition = dto.definition
+        )
+
+        cardRepository.save(updatedCard)
+
+        return dto.copy(id = id, createdAt = existingCard.createdAt)
+    }
+
     // Удалить карточку
     fun deleteCard(cardId: Long) {
         val card = cardRepository.findById(cardId)
