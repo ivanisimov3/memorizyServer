@@ -5,10 +5,12 @@ import com.memorizy.server.dto.AuthResponse
 import com.memorizy.server.model.User
 import com.memorizy.server.repository.UserRepository
 import com.memorizy.server.security.JwtService
+import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 
 // A service class that stores business logic
 
@@ -23,7 +25,7 @@ class AuthService(
     // Регистрация пользователя
     fun register(request: AuthRequest): AuthResponse {
         if (userRepository.existsByUsername(request.username)) {    // Проверка на занятость username
-            throw RuntimeException("Username is already taken")
+            throw ResponseStatusException(HttpStatus.CONFLICT, "Username '${request.username}' is already taken")
         }
 
         val user = User(
@@ -41,14 +43,16 @@ class AuthService(
     // Авторизация пользователя
     fun login(request: AuthRequest): AuthResponse {
 
-        // Spring Security сам проверит логин и пароль.
-        // Если пароль неверный, он выбросит ошибку (403 Forbidden).
-        authenticationManager.authenticate(
-            UsernamePasswordAuthenticationToken(
-                request.username,
-                request.password
+        try {
+            authenticationManager.authenticate( // Проверка на соответствие логина и пароля
+                UsernamePasswordAuthenticationToken(
+                    request.username,
+                    request.password
+                )
             )
-        )
+        } catch (e: Exception) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password")
+        }
 
         val user = userRepository.findByUsername(request.username)
             .orElseThrow()
