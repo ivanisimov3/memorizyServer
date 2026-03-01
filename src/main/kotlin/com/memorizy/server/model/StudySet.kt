@@ -24,6 +24,9 @@ data class StudySet(
     @Column(nullable = false, updatable = false)
     val createdAt: Long = System.currentTimeMillis(),
 
+    @Column
+    val targetDate: Long? = null,
+
     // Много наборов может принадлежать одному пользователю
     // FetchType.LAZY - если берем набор из БД не грузим сразу информацию о пользователе
     @ManyToOne(fetch = FetchType.LAZY)

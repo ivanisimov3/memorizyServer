@@ -34,12 +34,13 @@ class StudySetService(
             name = dto.name,
             description = dto.description,
             iconId = dto.iconId,
+            targetDate = dto.targetDate,
             user = currentUser
         )
 
         val savedSet = studySetRepository.save(studySet)
 
-        return dto.copy(id = savedSet.id)   // Возвращаем DTO с новым ID
+        return dto.copy(id = savedSet.id, createdAt = savedSet.createdAt)
     }
 
     // Получить все наборы текущего пользователя
@@ -52,7 +53,8 @@ class StudySetService(
                 name = set.name,
                 description = set.description,
                 iconId = set.iconId,
-                createdAt = set.createdAt
+                createdAt = set.createdAt,
+                targetDate = set.targetDate
             )
         }
     }
@@ -71,12 +73,13 @@ class StudySetService(
         val updatedSet = existingSet.copy(
             name = dto.name,
             description = dto.description,
-            iconId = dto.iconId
+            iconId = dto.iconId,
+            targetDate = dto.targetDate
         )
 
         studySetRepository.save(updatedSet)
 
-        return dto.copy(id = id, createdAt = existingSet.createdAt)
+        return dto.copy(id = id, createdAt = existingSet.createdAt, targetDate = updatedSet.targetDate)
     }
 
     // Удалить набор у текущего пользователя

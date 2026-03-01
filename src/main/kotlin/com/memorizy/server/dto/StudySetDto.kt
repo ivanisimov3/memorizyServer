@@ -7,5 +7,6 @@ data class StudySetDto(
     val name: String,
     val description: String?,
     val iconId: Int,
-    val createdAt: Long? = null
+    val createdAt: Long? = null,
+    val targetDate: Long? = null
 )

@@ -21,6 +21,12 @@ data class Card(
     @Column(nullable = false, updatable = false)
     val createdAt: Long = System.currentTimeMillis(),
 
+    @Column(nullable = false)
+    val level: Int = 0,
+
+    @Column(nullable = false)
+    val nextReviewDate: Long = System.currentTimeMillis(),
+
     // Много карточек может принадлежать одному набору
     // FetchType.LAZY - если берем карточку из БД не грузим сразу информацию о наборе
     @ManyToOne(fetch = FetchType.LAZY)

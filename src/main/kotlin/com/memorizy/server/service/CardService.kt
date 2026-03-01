@@ -34,12 +34,14 @@ class CardService(
         val card = Card(
             term = dto.term,
             definition = dto.definition,
+            level = dto.level ?: 0,
+            nextReviewDate = dto.nextReviewDate ?: System.currentTimeMillis(),
             studySet = studySet
         )
 
         val savedCard = cardRepository.save(card)
 
-        return dto.copy(id = savedCard.id)  // Возвращаем DTO с новым ID
+        return dto.copy(id = savedCard.id, createdAt = savedCard.createdAt)
     }
 
     // Получить все карточки текущего пользователя
@@ -57,7 +59,9 @@ class CardService(
                 term = card.term,
                 definition = card.definition,
                 studySetId = setId,
-                createdAt = card.createdAt
+                createdAt = card.createdAt,
+                level = card.level,
+                nextReviewDate = card.nextReviewDate
             )
         }
     }
@@ -73,12 +77,19 @@ class CardService(
 
         val updatedCard = existingCard.copy(
             term = dto.term,
-            definition = dto.definition
+            definition = dto.definition,
+            level = dto.level ?: existingCard.level,
+            nextReviewDate = dto.nextReviewDate ?: existingCard.nextReviewDate
         )
 
         cardRepository.save(updatedCard)
 
-        return dto.copy(id = id, createdAt = existingCard.createdAt)
+        return dto.copy(
+            id = id,
+            createdAt = existingCard.createdAt,
+            level = updatedCard.level,
+            nextReviewDate = updatedCard.nextReviewDate
+        )
     }
 
     // Удалить карточку
