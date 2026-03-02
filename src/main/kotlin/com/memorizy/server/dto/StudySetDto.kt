@@ -1,9 +1,9 @@
 package com.memorizy.server.dto
 
-// DTO (Data Transfer Object) - objects between client and server
+// Данные набора для клиента
 
 data class StudySetDto(
-    val id: Long? = null,   // ID может не быть при создании
+    val id: Long? = null,
     val name: String,
     val description: String?,
     val iconId: Int,

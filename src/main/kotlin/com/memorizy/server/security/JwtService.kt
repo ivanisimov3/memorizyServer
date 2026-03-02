@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 import java.util.Date
 import javax.crypto.SecretKey
 
-// A service class for performing all operations on tokens
+// Вспомогательный класс для операций с безопасностью
 
 @Service
 class JwtService (

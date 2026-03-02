@@ -3,7 +3,9 @@ package com.memorizy.server.repository
 import com.memorizy.server.model.StudySet
 import org.springframework.data.jpa.repository.JpaRepository
 
-// Tools for working with study_sets table
+// Репозиторий для операций с сущностью StudySet в БД
+// https://docs.spring.io/spring-data/rest/reference/data-commons/repositories/query-methods-details.html
+// https://docs.spring.io/spring-data/rest/reference/data-commons/repositories/query-keywords-reference.html#appendix.query.method.subject
 
 // JpaRepository<Сущность, Тип_ID>
 interface StudySetRepository : JpaRepository<StudySet, Long> {

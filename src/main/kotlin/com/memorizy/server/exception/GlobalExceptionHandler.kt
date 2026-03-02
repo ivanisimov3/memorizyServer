@@ -5,7 +5,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.server.ResponseStatusException
 
-// Вспомогательный класс, чтобы отправлять на клиент корректные коды ошибок (Spring Security менял все на 403)
+// Вспомогательный класс, чтобы отправлять на клиент корректные коды ошибок
+
 @RestControllerAdvice
 class GlobalExceptionHandler {
 

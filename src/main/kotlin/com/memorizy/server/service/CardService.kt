@@ -9,7 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 
-// A service class that stores business logic
+// Слой бизнес логики для операций над карточками
 
 @Service
 class CardService(

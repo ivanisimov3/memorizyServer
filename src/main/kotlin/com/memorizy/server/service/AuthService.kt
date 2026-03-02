@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 
-// A service class that stores business logic
+// Слой бизнес логики для авторизации
 
 @Service
 class AuthService(

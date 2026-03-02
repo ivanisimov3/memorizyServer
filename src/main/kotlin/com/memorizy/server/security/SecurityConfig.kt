@@ -12,8 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
-// A class that instructs Spring Security how to behave
-// Bean - indicates that a method produces a bean to be managed by the Spring container.
+// Класс конфигурации Spring Security
 
 @Configuration
 @EnableWebSecurity
@@ -31,9 +30,9 @@ class SecurityConfig(
                 it.anyRequest().authenticated() // Другие запросы требуют авторизацию
             }
             .sessionManagement {
-                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)   // Каждый раз вход проверять токен
+                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)   // Каждый раз при входе проверять токен
             }
-            // Сначала проверить токен, потом все остально
+            // Сначала проверить токен, потом все остальное
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
@@ -45,7 +44,7 @@ class SecurityConfig(
         return BCryptPasswordEncoder() // Способ шифровки
     }
 
-    // Предоаставление приложению доступа к authenticationManager
+    // Предоставление приложению доступа к authenticationManager
     @Bean
     fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager {
         return config.authenticationManager

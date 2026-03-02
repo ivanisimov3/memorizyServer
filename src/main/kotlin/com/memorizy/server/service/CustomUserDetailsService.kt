@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 
-// A service class that stores business logic
+// Слой бизнес логики для получения информации о пользователе
 
 @Service
 class CustomUserDetailsService(

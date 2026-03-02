@@ -2,14 +2,14 @@ package com.memorizy.server.model
 
 import jakarta.persistence.*
 
-// The entity for which Hibernate will create the tables itself
+// Сущность карточка
 
 @Entity
 @Table(name = "cards")
 data class Card(
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Assign database identity column
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // The persistence provider должен назначить первичные ключи для объекта, используя столбец id.
     val id: Long = 0,
 
     @Column(nullable = false)
@@ -28,7 +28,7 @@ data class Card(
     val nextReviewDate: Long = System.currentTimeMillis(),
 
     // Много карточек может принадлежать одному набору
-    // FetchType.LAZY - если берем карточку из БД не грузим сразу информацию о наборе
+    // FetchType.LAZY - если берем карточку из БД не грузим информацию о наборе
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "study_set_id", nullable = false)
     val studySet: StudySet

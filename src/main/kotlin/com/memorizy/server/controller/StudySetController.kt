@@ -5,7 +5,7 @@ import com.memorizy.server.service.StudySetService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-// Controller, the task is to accept the request, send it to the correct service, receive a response and send it back.
+// Endpoints для операций над наборами
 
 @RestController
 @RequestMapping("/api/sets")

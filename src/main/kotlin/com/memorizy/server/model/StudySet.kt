@@ -2,14 +2,14 @@ package com.memorizy.server.model
 
 import jakarta.persistence.*
 
-// The entity for which Hibernate will create the tables itself
+// Сущность набор
 
 @Entity
 @Table(name = "study_sets")
 data class StudySet(
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Assign database identity column
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // The persistence provider должен назначить первичные ключи для объекта, используя столбец id.
     val id: Long = 0,
 
     @Column(nullable = false)
@@ -28,7 +28,7 @@ data class StudySet(
     val targetDate: Long? = null,
 
     // Много наборов может принадлежать одному пользователю
-    // FetchType.LAZY - если берем набор из БД не грузим сразу информацию о пользователе
+    // FetchType.LAZY - если берем набор из БД не грузим информацию о пользователе
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,

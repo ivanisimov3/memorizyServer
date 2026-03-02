@@ -1,6 +1,6 @@
 package com.memorizy.server.dto
 
-// DTO (Data Transfer Object) - objects between client and server
+// Входные данные при авторизации
 
 data class AuthRequest(
     val username: String,

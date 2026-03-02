@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 
-// A service class that stores business logic
+// Слой бизнес логики для операций над наборами
 
 @Service
 class StudySetService(
