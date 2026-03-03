@@ -1,6 +1,6 @@
 package com.memorizy.server.dto
 
-// Данные набора для клиента
+// Параметры набора для передачи данных
 
 data class StudySetDto(
     val id: Long? = null,

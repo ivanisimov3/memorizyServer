@@ -34,7 +34,7 @@ class CardService(
         val card = Card(
             term = dto.term,
             definition = dto.definition,
-            level = dto.level ?: 0,
+            level = dto.level,
             nextReviewDate = dto.nextReviewDate ?: System.currentTimeMillis(),
             studySet = studySet
         )
@@ -78,7 +78,7 @@ class CardService(
         val updatedCard = existingCard.copy(
             term = dto.term,
             definition = dto.definition,
-            level = dto.level ?: existingCard.level,
+            level = dto.level,
             nextReviewDate = dto.nextReviewDate ?: existingCard.nextReviewDate
         )
 

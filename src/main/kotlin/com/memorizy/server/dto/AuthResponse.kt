@@ -1,6 +1,6 @@
 package com.memorizy.server.dto
 
-// Выходные данные при авторизации
+// Выходные данные из сервера при авторизации
 
 data class AuthResponse(
     val token: String,

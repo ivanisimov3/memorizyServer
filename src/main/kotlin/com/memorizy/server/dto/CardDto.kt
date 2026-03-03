@@ -1,6 +1,6 @@
 package com.memorizy.server.dto
 
-// Данные карточки для клиента
+// Параметры карточки для передачи данных
 
 data class CardDto (
     val id: Long? = null,
@@ -8,6 +8,6 @@ data class CardDto (
     val definition: String,
     val studySetId: Long,
     val createdAt: Long? = null,
-    val level: Int? = null,
+    val level: Int = 0,
     val nextReviewDate: Long? = null
 )
