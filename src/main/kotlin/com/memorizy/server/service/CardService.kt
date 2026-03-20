@@ -1,5 +1,7 @@
 package com.memorizy.server.service
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.memorizy.server.dto.CardDto
 import com.memorizy.server.model.Card
 import com.memorizy.server.repository.CardRepository
@@ -16,6 +18,8 @@ class CardService(
     private val cardRepository: CardRepository,
     private val studySetRepository: StudySetRepository
 ) {
+
+    private val objectMapper = jacksonObjectMapper()
 
     // Найти текущее Username в базе
     private fun getCurrentUsername(): String {
@@ -34,6 +38,10 @@ class CardService(
         val card = Card(
             term = dto.term,
             definition = dto.definition,
+            definitionVariantsJson = serializeDefinitionVariants(
+                primaryDefinition = dto.definition,
+                rawVariants = dto.definitionVariants
+            ),
             level = dto.level,
             nextReviewDate = dto.nextReviewDate ?: System.currentTimeMillis(),
             studySet = studySet
@@ -41,7 +49,7 @@ class CardService(
 
         val savedCard = cardRepository.save(card)
 
-        return dto.copy(id = savedCard.id, createdAt = savedCard.createdAt)
+        return savedCard.toDto()
     }
 
     // Получить все карточки текущего пользователя
@@ -54,15 +62,7 @@ class CardService(
         }
 
         return cardRepository.findAllByStudySetId(setId).map { card ->
-            CardDto(
-                id = card.id,
-                term = card.term,
-                definition = card.definition,
-                studySetId = setId,
-                createdAt = card.createdAt,
-                level = card.level,
-                nextReviewDate = card.nextReviewDate
-            )
+            card.toDto()
         }
     }
 
@@ -78,18 +78,17 @@ class CardService(
         val updatedCard = existingCard.copy(
             term = dto.term,
             definition = dto.definition,
+            definitionVariantsJson = serializeDefinitionVariants(
+                primaryDefinition = dto.definition,
+                rawVariants = dto.definitionVariants
+            ),
             level = dto.level,
             nextReviewDate = dto.nextReviewDate ?: existingCard.nextReviewDate
         )
 
-        cardRepository.save(updatedCard)
+        val savedCard = cardRepository.save(updatedCard)
 
-        return dto.copy(
-            id = id,
-            createdAt = existingCard.createdAt,
-            level = updatedCard.level,
-            nextReviewDate = updatedCard.nextReviewDate
-        )
+        return savedCard.toDto()
     }
 
     // Удалить карточку
@@ -102,5 +101,55 @@ class CardService(
         }
 
         cardRepository.delete(card)
+    }
+
+    private fun Card.toDto(): CardDto {
+        return CardDto(
+            id = id,
+            term = term,
+            definition = definition,
+            definitionVariants = deserializeDefinitionVariants(
+                primaryDefinition = definition,
+                serializedVariants = definitionVariantsJson
+            ),
+            studySetId = studySet.id,
+            createdAt = createdAt,
+            level = level,
+            nextReviewDate = nextReviewDate
+        )
+    }
+
+    private fun serializeDefinitionVariants(
+        primaryDefinition: String,
+        rawVariants: List<String>
+    ): String {
+        val normalizedVariants = normalizeDefinitionVariants(primaryDefinition, rawVariants)
+        return objectMapper.writeValueAsString(normalizedVariants)
+    }
+
+    private fun deserializeDefinitionVariants(
+        primaryDefinition: String,
+        serializedVariants: String
+    ): List<String> {
+        val rawVariants = runCatching {
+            objectMapper.readValue<List<String>>(serializedVariants)
+        }.getOrElse {
+            emptyList()
+        }
+
+        return normalizeDefinitionVariants(primaryDefinition, rawVariants)
+    }
+
+    private fun normalizeDefinitionVariants(
+        primaryDefinition: String,
+        rawVariants: List<String>
+    ): List<String> {
+        val normalizedPrimary = primaryDefinition.trim()
+
+        return rawVariants
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+            .filter { it != normalizedPrimary }
+            .distinct()
     }
 }

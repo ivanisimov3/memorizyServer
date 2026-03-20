@@ -18,6 +18,9 @@ data class Card(
     @Column(nullable = false)
     val definition: String,
 
+    @Column(nullable = false, columnDefinition = "TEXT")    // Указываем columnDefinition чтобы не поставило VARCHAR255
+    val definitionVariantsJson: String = "[]",
+
     @Column(nullable = false, updatable = false)
     val createdAt: Long = System.currentTimeMillis(),
 
