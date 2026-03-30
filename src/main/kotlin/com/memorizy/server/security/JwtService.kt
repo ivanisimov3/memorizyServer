@@ -37,9 +37,14 @@ class JwtService (
         return Keys.hmacShaKeyFor(keyBytes)
     }
 
-    // Извлечени и возвращение имени из токена
+    // Извлечение и возвращение имени из токена
     fun extractUsername(token: String): String {
         return extractAllClaims(token).subject
+    }
+
+    // Возвращение Null в случае некорректного токена
+    fun extractUsernameOrNull(token: String): String? {
+        return runCatching { extractUsername(token) }.getOrNull()
     }
 
     // Попытка извлечения имени из токена

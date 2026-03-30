@@ -31,7 +31,7 @@ class JwtAuthFilter(
         }
 
         val jwt = authHeader.substring(7)   // Токен без ключевого слова Bearer
-        val username = jwtService.extractUsername(jwt)  // Извлекаем имя из токена
+        val username = jwtService.extractUsernameOrNull(jwt)  // Извлекаем имя из токена
 
         // Если имя существует (зарагестрирован), но не авторизован
         if (username != null && SecurityContextHolder.getContext().authentication == null) {
