@@ -33,11 +33,11 @@ class AuthService(
             passwordHash = passwordEncoder.encode(request.password)
         )
 
-        userRepository.save(user)
+        val savedUser = userRepository.save(user)
 
         // Сразу выдаем токен, чтобы не заставлять логиниться
-        val token = jwtService.generateToken(user.username)
-        return AuthResponse(token, user.id)
+        val token = jwtService.generateToken(savedUser.username)
+        return AuthResponse(token, savedUser.id)
     }
 
     // Авторизация пользователя
