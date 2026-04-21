@@ -13,11 +13,6 @@ class CardController(
     private val cardService: CardService
 ) {
 
-    @GetMapping("/by-set/{setId}")
-    fun getCardsBySet(@PathVariable setId: Long): ResponseEntity<List<CardDto>> {
-        return ResponseEntity.ok(cardService.getCardsBySetId(setId))
-    }
-
     @PostMapping
     fun createCard(@RequestBody dto: CardDto): ResponseEntity<CardDto> {
         return ResponseEntity.ok(cardService.createCard(dto))
