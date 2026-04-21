@@ -6,11 +6,11 @@ services:
     image: postgres:15-alpine # Использовать облегченную версию
     container_name: memorizy_db
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     environment:  # Настройки Базы Данных при первом запуске
-      POSTGRES_DB: memorizy_db
-      POSTGRES_USER: memorizy_user
-      POSTGRES_PASSWORD: memorizy_password
+      POSTGRES_DB: ${DB_NAME:-memorizy_db}
+      POSTGRES_USER: ${DB_USER:-memorizy_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-memorizy_password}
     volumes:  # Связывание директории с данными и именованный том на хост-машине
       - postgres_data:/var/lib/postgresql/data
 
