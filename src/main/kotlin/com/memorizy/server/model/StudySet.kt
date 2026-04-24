@@ -12,10 +12,10 @@ data class StudySet(
     @GeneratedValue(strategy = GenerationType.IDENTITY) // The persistence provider должен назначить первичные ключи для объекта, используя столбец id.
     val id: Long = 0,
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     val name: String,
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     val description: String? = null,
 
     @Column(nullable = false)

@@ -12,10 +12,10 @@ data class Card(
     @GeneratedValue(strategy = GenerationType.IDENTITY) // The persistence provider должен назначить первичные ключи для объекта, используя столбец id.
     val id: Long = 0,
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     val term: String,
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     val definition: String,
 
     @Column(nullable = false, columnDefinition = "TEXT")    // Указываем columnDefinition чтобы не поставило VARCHAR255
