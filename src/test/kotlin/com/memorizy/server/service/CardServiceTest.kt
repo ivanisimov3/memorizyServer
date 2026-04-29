@@ -44,7 +44,10 @@ class CardServiceTest {
             definitionVariants = listOf("  ", "Базовая единица", "Структурная единица", "Структурная единица"),
             studySetId = 100,
             level = 2,
-            nextReviewDate = 555L
+            nextReviewDate = 555L,
+            reviewCount = 7,
+            mistakeCount = 2,
+            recentAnswerHistory = "001011"
         )
         val capturedCard = slot<Card>()
 
@@ -59,6 +62,10 @@ class CardServiceTest {
         assertEquals(50L, response.id)
         assertEquals(listOf("Структурная единица"), response.definitionVariants)
         assertEquals("[\"Структурная единица\"]", capturedCard.captured.definitionVariantsJson)
+        assertEquals(request.reviewCount, response.reviewCount)
+        assertEquals(request.mistakeCount, response.mistakeCount)
+        assertEquals("01011", response.recentAnswerHistory)
+        assertEquals("01011", capturedCard.captured.recentAnswerHistory)
     }
 
     @Test
@@ -131,7 +138,10 @@ class CardServiceTest {
             definitionVariants = listOf("Новое определение", "Новый вариант"),
             studySetId = 100,
             level = 4,
-            nextReviewDate = 777L
+            nextReviewDate = 777L,
+            reviewCount = 12,
+            mistakeCount = 3,
+            recentAnswerHistory = "bad10101"
         )
 
         authenticateAs(owner.username)
@@ -143,6 +153,9 @@ class CardServiceTest {
         assertEquals(request.term, result.term)
         assertEquals(listOf("Новый вариант"), result.definitionVariants)
         assertEquals(request.nextReviewDate, result.nextReviewDate)
+        assertEquals(request.reviewCount, result.reviewCount)
+        assertEquals(request.mistakeCount, result.mistakeCount)
+        assertEquals("10101", result.recentAnswerHistory)
     }
 
     @Test
@@ -204,6 +217,9 @@ class CardServiceTest {
         createdAt = 11L,
         level = 1,
         nextReviewDate = 12L,
+        reviewCount = 4,
+        mistakeCount = 1,
+        recentAnswerHistory = "1101",
         studySet = studySet
     )
 }

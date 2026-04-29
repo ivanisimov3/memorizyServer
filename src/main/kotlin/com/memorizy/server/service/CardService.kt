@@ -44,6 +44,9 @@ class CardService(
             ),
             level = dto.level,
             nextReviewDate = dto.nextReviewDate ?: System.currentTimeMillis(),
+            reviewCount = dto.reviewCount,
+            mistakeCount = dto.mistakeCount,
+            recentAnswerHistory = normalizeRecentAnswerHistory(dto.recentAnswerHistory),
             studySet = studySet
         )
 
@@ -83,7 +86,10 @@ class CardService(
                 rawVariants = dto.definitionVariants
             ),
             level = dto.level,
-            nextReviewDate = dto.nextReviewDate ?: existingCard.nextReviewDate
+            nextReviewDate = dto.nextReviewDate ?: existingCard.nextReviewDate,
+            reviewCount = dto.reviewCount,
+            mistakeCount = dto.mistakeCount,
+            recentAnswerHistory = normalizeRecentAnswerHistory(dto.recentAnswerHistory)
         )
 
         val savedCard = cardRepository.save(updatedCard)
@@ -115,8 +121,15 @@ class CardService(
             studySetId = studySet.id,
             createdAt = createdAt,
             level = level,
-            nextReviewDate = nextReviewDate
+            nextReviewDate = nextReviewDate,
+            reviewCount = reviewCount,
+            mistakeCount = mistakeCount,
+            recentAnswerHistory = recentAnswerHistory
         )
+    }
+
+    private fun normalizeRecentAnswerHistory(history: String): String {
+        return history.filter { it == '0' || it == '1' }.takeLast(5)
     }
 
     private fun serializeDefinitionVariants(

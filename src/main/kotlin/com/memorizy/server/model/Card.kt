@@ -30,6 +30,15 @@ data class Card(
     @Column(nullable = false)
     val nextReviewDate: Long = System.currentTimeMillis(),
 
+    @Column(nullable = false)
+    val reviewCount: Int = 0,
+
+    @Column(nullable = false)
+    val mistakeCount: Int = 0,
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    val recentAnswerHistory: String = "",
+
     // Много карточек может принадлежать одному набору
     // FetchType.LAZY - если берем карточку из БД не грузим информацию о наборе
     @ManyToOne(fetch = FetchType.LAZY)
