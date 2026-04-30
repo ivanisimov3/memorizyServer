@@ -1,49 +1,49 @@
 # Memorizy Server
 
-Spring Boot backend for the Memorizy Android application. It provides authentication, remote storage for study sets, cards, learning sessions, and REST endpoints used by the mobile synchronization layer.
+Spring Boot-бэкенд для Android-приложения Memorizy. Он обеспечивает аутентификацию, удалённое хранение учебных наборов, карточек и учебных сессий, а также REST-эндпоинты, используемые мобильным слоем синхронизации.
 
-## Tech Stack
+## Технологический стек
 
-- Kotlin
-- Spring Boot
-- Spring Security with JWT
-- Spring Data JPA
-- PostgreSQL
-- Docker Compose for local database setup
+* Kotlin
+* Spring Boot
+* Spring Security с JWT
+* Spring Data JPA
+* PostgreSQL
+* Docker Compose для локального запуска базы данных
 
-## Configuration
+## Конфигурация
 
-Copy `.env.example` to `.env` for local development and replace placeholder values:
+Для локальной разработки скопируйте `.env.example` в `.env` и замените значения-заглушки:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-Required production values:
+Обязательные значения для production-среды:
 
-- `DB_PASSWORD`
-- `JWT_SECRET`
+* `DB_PASSWORD`
+* `JWT_SECRET`
 
-`JWT_SECRET` must be a Base64-encoded key suitable for HS256.
+`JWT_SECRET` должен быть Base64-кодированным ключом, подходящим для HS256.
 
-Example for generating a local secret:
+Пример генерации локального секрета:
 
 ```powershell
 [Convert]::ToBase64String([byte[]](1..32 | ForEach-Object { Get-Random -Maximum 256 }))
 ```
 
-## Local Run
+## Локальный запуск
 
 ```powershell
 docker compose up -d
 .\gradlew.bat bootRun
 ```
 
-The server listens on `SERVER_PORT`, default `8080`.
+Сервер слушает порт из `SERVER_PORT`, по умолчанию — `8080`.
 
-## Production Docker Run
+## Production-запуск в Docker
 
-On a VPS, install Docker and run:
+На VPS установите Docker и выполните:
 
 ```bash
 cp .env.example .env
@@ -51,15 +51,15 @@ nano .env
 docker compose -f docker-compose.prod.yaml up -d --build
 ```
 
-The production Compose file starts PostgreSQL and the Spring Boot app. The app is published on port `80` and connects to PostgreSQL through the internal Docker network.
+Production Compose-файл запускает PostgreSQL и Spring Boot-приложение. Приложение публикуется на порту `80` и подключается к PostgreSQL через внутреннюю Docker-сеть.
 
-Check logs:
+Проверка логов:
 
 ```bash
 docker compose -f docker-compose.prod.yaml logs -f app
 ```
 
-## Tests
+## Тесты
 
 ```powershell
 .\gradlew.bat test
