@@ -10,7 +10,7 @@ services:
     environment:  # Настройки Базы Данных при первом запуске
       POSTGRES_DB: ${DB_NAME:-memorizy_db}
       POSTGRES_USER: ${DB_USER:-memorizy_user}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-memorizy_password}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
     volumes:  # Связывание директории с данными и именованный том на хост-машине
       - postgres_data:/var/lib/postgresql/data
 

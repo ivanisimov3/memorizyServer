@@ -23,7 +23,6 @@ class JwtServiceTest {
         // Проверяем, что токен не пустой
         assertNotNull(token)
         assertTrue(token.isNotEmpty())
-        println("Generated Token: $token") // Выведет токен в консоль
 
         // 3. Пытаемся извлечь имя обратно
         val extractedUsername = jwtService.extractUsername(token)
