@@ -34,7 +34,12 @@ data class StudySet(
     val user: User,
 
     // У одного набора может быть много карточек
-    // При удалении набора удалять всех его детей
+    // При удалении набора удалять все его карточки
     @OneToMany(mappedBy = "studySet", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val cards: List<Card> = emptyList()
+    val cards: List<Card> = emptyList(),
+
+    // У одного набора может быть много записей учебных сессий
+    // При удалении набора удалять всю его историю сессий
+    @OneToMany(mappedBy = "studySet", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val sessionRecords: List<SessionRecord> = emptyList()
 )

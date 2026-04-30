@@ -1,8 +1,10 @@
 package com.memorizy.server.controller
 
 import com.memorizy.server.dto.CardDto
+import com.memorizy.server.dto.SessionRecordDto
 import com.memorizy.server.dto.StudySetDto
 import com.memorizy.server.service.CardService
+import com.memorizy.server.service.SessionRecordService
 import com.memorizy.server.service.StudySetService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -13,7 +15,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/sets")
 class StudySetController(
     private val studySetService: StudySetService,
-    private val cardService: CardService
+    private val cardService: CardService,
+    private val sessionRecordService: SessionRecordService
 ) {
 
     @GetMapping
@@ -40,5 +43,10 @@ class StudySetController(
     @GetMapping("/{setId}/cards")
     fun getCardsBySet(@PathVariable setId: Long): ResponseEntity<List<CardDto>> {
         return ResponseEntity.ok(cardService.getCardsBySetId(setId))
+    }
+
+    @GetMapping("/{setId}/sessions")
+    fun getSessionRecordsBySet(@PathVariable setId: Long): ResponseEntity<List<SessionRecordDto>> {
+        return ResponseEntity.ok(sessionRecordService.getSessionRecordsBySetId(setId))
     }
 }
